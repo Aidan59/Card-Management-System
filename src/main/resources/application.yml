@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/card-management-system
+    username: postgres
+    password: postgres
+  liquibase:
+    enabled: true
+  application:
+    name: card-management-system

@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-block-request-table
+      author: Danil
+      changes:
+        - createTable:
+            tableName: block_card_request
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: card_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_card_block_request_card
+                    references: card(id)
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_card_block_request_user
+                    references: user(id)
+              - column:
+                  name: request_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
