@@ -4,7 +4,7 @@ databaseChangeLog:
       author: Danil
       changes:
         - createTable:
-            tableName: block_card_request
+            tableName: block_card_requests
             columns:
               - column:
                   name: id
@@ -19,14 +19,14 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: fk_card_block_request_card
-                    references: card(id)
+                    references: cards(id)
               - column:
                   name: user_id
                   type: bigint
                   constraints:
                     nullable: false
                     foreignKeyName: fk_card_block_request_user
-                    references: user(id)
+                    references: users(id)
               - column:
                   name: request_date
                   type: timestamp

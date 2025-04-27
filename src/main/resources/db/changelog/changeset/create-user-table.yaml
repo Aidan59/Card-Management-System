@@ -4,7 +4,7 @@ databaseChangeLog:
       author: Danil
       changes:
         - createTable:
-            tableName: user
+            tableName: users
             columns:
               - column:
                   name: id
@@ -35,9 +35,8 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: role_id
-                  type: int
+                  name: role
+                  type: varchar(10)
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_user_role
-                    references: role(id)
+

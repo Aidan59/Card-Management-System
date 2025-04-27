@@ -4,7 +4,7 @@ databaseChangeLog:
       author: Danil
       changes:
         - createTable:
-            tableName: card
+            tableName: cards
             columns:
               - column:
                   name: id
@@ -15,7 +15,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: number
-                  type: varchar(16)
+                  type: varchar
                   constraints:
                     nullable: false
                     unique: true
@@ -41,4 +41,4 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: fk_card_user
-                    references: user(id)
+                    references: users(id)

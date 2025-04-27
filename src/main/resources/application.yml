@@ -8,3 +8,7 @@ spring:
     enabled: true
   application:
     name: card-management-system
+  security:
+    user:
+      name: admin
+      password: admin

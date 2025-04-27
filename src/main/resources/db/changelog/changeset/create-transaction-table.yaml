@@ -4,7 +4,7 @@ databaseChangeLog:
       author: Danil
       changes:
         - createTable:
-            tableName: transaction
+            tableName: transactions
             columns:
               - column:
                   name: id
@@ -19,14 +19,14 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: fk_transaction_from_card_card
-                    references: card(id)
+                    references: cards(id)
               - column:
                   name: to_card_id
                   type: bigint
                   constraints:
                     nullable: false
                     foreignKeyName: fk_transaction_to_card_card
-                    references: card(id)
+                    references: cards(id)
               - column:
                   name: amount
                   type: decimal(10, 2)
