@@ -15,11 +15,11 @@ public class Transaction {
 
     @OneToOne
     @JoinColumn(name = "from_card_id", referencedColumnName = "id", nullable = false)
-    private Card from_card_id;
+    private Card fromCardId;
 
     @OneToOne
     @JoinColumn(name = "to_card_id", referencedColumnName = "id", nullable = false)
-    private Card to_card_id;
+    private Card toCardId;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
@@ -36,20 +36,20 @@ public class Transaction {
         this.id = id;
     }
 
-    public Card getFrom_card_id() {
-        return from_card_id;
+    public Card getFromCardId() {
+        return fromCardId;
     }
 
-    public void setFrom_card_id(Card from_card_id) {
-        this.from_card_id = from_card_id;
+    public void setFromCardId(Card fromCardId) {
+        this.fromCardId = fromCardId;
     }
 
-    public Card getTo_card_id() {
-        return to_card_id;
+    public Card getToCardId() {
+        return toCardId;
     }
 
-    public void setTo_card_id(Card to_card_id) {
-        this.to_card_id = to_card_id;
+    public void setToCardId(Card toCardId) {
+        this.toCardId = toCardId;
     }
 
     public BigDecimal getAmount() {

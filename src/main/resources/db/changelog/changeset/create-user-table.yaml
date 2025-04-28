@@ -39,4 +39,9 @@ databaseChangeLog:
                   type: varchar(10)
                   constraints:
                     nullable: false
+              - column:
+                  name: monthly_limit
+                  type: bigint
+                  constraints:
+                    nullable: true
 

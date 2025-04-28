@@ -1,5 +1,6 @@
 package com.example.card_management_system.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -28,6 +29,7 @@ public class Card {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private User user;
 
     public Long getId() {
@@ -77,4 +79,5 @@ public class Card {
     public void setUser(User user) {
         this.user = user;
     }
+
 }

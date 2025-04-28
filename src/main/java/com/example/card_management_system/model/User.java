@@ -1,5 +1,6 @@
 package com.example.card_management_system.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,7 +37,11 @@ public class User implements UserDetails {
     private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Card> cards;
+
+    @Column(name = "monthly_limit", nullable = true)
+    private Long monthlyLimit;
 
     public enum Role {
         ADMIN,
@@ -111,5 +116,13 @@ public class User implements UserDetails {
 
     public void setCards(List<Card> cards) {
         this.cards = cards;
+    }
+
+    public Long getMonthlyLimit() {
+        return monthlyLimit;
+    }
+
+    public void setMonthlyLimit(Long monthlyLimit) {
+        this.monthlyLimit = monthlyLimit;
     }
 }
