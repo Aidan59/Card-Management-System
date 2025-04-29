@@ -8,6 +8,7 @@ import com.example.card_management_system.util.AESUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,7 @@ public class CardService {
         card.setUser(userRepository.findById(cardDto.getUserId()).get());
         card.setBalance(cardDto.getBalance());
         card.setNumber(aesUtil.encrypt(cardDto.getNumber()));
-        card.setExpiration_date(cardDto.getExpiration_date());
+        card.setExpiration_date(cardDto.getExpiration_date() != null? cardDto.getExpiration_date(): new Timestamp(System.currentTimeMillis()));
         card.setStatus(cardDto.getStatus());
 
         cardRepository.save(card);

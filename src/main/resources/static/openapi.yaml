@@ -1,0 +1,424 @@
+openapi: 3.0.1
+info:
+  title: Card Management System API
+  description: API для управления картами, пользователями и транзакциями.
+  version: "1.0.0"
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /api/auth/login:
+    post:
+      summary: Аутентификация пользователя
+      tags:
+        - Auth
+      operationId: authenticateUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: user@example.com
+                password:
+                  type: string
+                  example: password123
+      responses:
+        '200':
+          description: Успешная аутентификация, токен JWT возвращен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        '400':
+          description: Неверные учетные данные
+
+  /api/admin/cards:
+    get:
+      summary: Получить все карты
+      tags:
+        - Admin
+      security:
+        - bearerAuth: [ ]
+      operationId: getAllCards
+      responses:
+        '200':
+          description: Список всех карт
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CardDto'
+
+  /api/admin/cards/create:
+    post:
+      summary: Создать карту
+      tags:
+        - Admin
+      security:
+        - bearerAuth: [ ]
+      operationId: createCard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardDto'
+      responses:
+        '201':
+          description: Карта успешно создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardDto'
+
+  /api/admin/cards/{id}/transactions:
+    get:
+      summary: Получить все транзакции для карты
+      tags:
+        - Admin
+      security:
+        - bearerAuth: [ ]
+      operationId: getCardTransactions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID карты
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Список транзакций карты
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionDto'
+
+  /api/admin/cards/{id}/block:
+    post:
+      summary: Заблокировать карту
+      tags:
+        - Admin
+      security:
+        - bearerAuth: [ ]
+      operationId: blockCard
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID карты
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Карта заблокирована
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardDto'
+
+  /api/admin/cards/{id}/activate:
+    post:
+      summary: Активировать карту
+      tags:
+        - Admin
+      security:
+        - bearerAuth: [ ]
+      operationId: activateCard
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID карты
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Карта активирована
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardDto'
+
+  /api/admin/cards/{id}/delete:
+    delete:
+      summary: Удалить карту
+      tags:
+        - Admin
+      security:
+        - bearerAuth: [ ]
+      operationId: deleteCard
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID карты
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Карта удалена
+
+  /api/admin/users:
+    get:
+      summary: Получить всех пользователей
+      tags:
+        - Admin
+      security:
+        - bearerAuth: [ ]
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: Список всех пользователей
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDto'
+
+  /api/admin/users/create:
+    post:
+      summary: Создать пользователя
+      tags:
+        - Admin
+      security:
+        - bearerAuth: [ ]
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+      responses:
+        '201':
+          description: Пользователь успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+
+  /api/admin/users/{id}/limit/{limit}:
+    post:
+      summary: Установить лимит для пользователя
+      tags:
+        - Admin
+      security:
+        - bearerAuth: [ ]
+      operationId: setUserLimit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID пользователя
+          schema:
+            type: integer
+            example: 1
+        - name: limit
+          in: path
+          required: true
+          description: Лимит
+          schema:
+            type: integer
+            example: 1000
+      responses:
+        '200':
+          description: Лимит установлен
+
+  /api/admin/users/{id}/delete:
+    delete:
+      summary: Удалить пользователя
+      tags:
+        - Admin
+      security:
+        - bearerAuth: [ ]
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID пользователя
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Пользователь удален
+
+  /api/user/cards:
+    get:
+      summary: Получить все карты текущего пользователя
+      tags:
+        - User
+      security:
+        - bearerAuth: [ ]
+      operationId: getAllUserCards
+      responses:
+        '200':
+          description: Список карт пользователя
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CardDto'
+
+  /api/user/cards/{id}/block_request:
+    post:
+      summary: Оставить заявку на блокировку карты
+      tags:
+        - User
+      security:
+        - bearerAuth: [ ]
+      operationId: getBlockCardRequest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID карты
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Заявка на блокировку карты оставлена.
+
+  /api/user/cards/{id}/transactions:
+    get:
+      summary: Получить транзакции по карте текущего пользователя
+      tags:
+        - User
+      security:
+        - bearerAuth: [ ]
+      operationId: getAllCardTransactions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID карты
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Список транзакций карты
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionDto'
+
+  /api/user/cards/transaction:
+    post:
+      summary: Выполнить перевод между картами пользователя
+      tags:
+        - User
+      security:
+        - bearerAuth: [ ]
+      operationId: addCardTransaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionDto'
+      responses:
+        '200':
+          description: Перевод успешно совершён.
+
+  /api/user/cards/{id}/withdraw/{amount}:
+    post:
+      summary: Снять деньги с карты
+      tags:
+        - User
+      security:
+        - bearerAuth: [ ]
+      operationId: withdrawMoney
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID карты
+          schema:
+            type: integer
+            example: 1
+        - name: amount
+          in: path
+          required: true
+          description: Сумма для снятия
+          schema:
+            type: number
+            format: float
+            example: 100.0
+      responses:
+        '200':
+          description: Снятие средств успешно выполнено
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    CardDto:
+      type: object
+      properties:
+        number:
+          type: string
+        status:
+          type: string
+        balance:
+          type: number
+          format: float
+        userId:
+          type: integer
+
+    TransactionDto:
+      type: object
+      properties:
+        fromCardId:
+          type: integer
+        toCardId:
+          type: integer
+        amount:
+          type: number
+          format: float
+        timestamp:
+          type: string
+          format: date-time
+
+    UserDto:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        first_Name:
+          type: string
+        last_Name:
+          type: string
+        role:
+          type: string
+          enum:
+            - ADMIN
+            - USER
