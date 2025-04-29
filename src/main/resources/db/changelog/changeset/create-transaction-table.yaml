@@ -14,6 +14,13 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_transaction_user
+                    references: users(id)
+              - column:
                   name: from_card_id
                   type: bigint
                   constraints:
@@ -24,7 +31,7 @@ databaseChangeLog:
                   name: to_card_id
                   type: bigint
                   constraints:
-                    nullable: false
+                    nullable: true
                     foreignKeyName: fk_transaction_to_card_card
                     references: cards(id)
               - column:

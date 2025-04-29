@@ -13,12 +13,16 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private User user;
+
     @OneToOne
     @JoinColumn(name = "from_card_id", referencedColumnName = "id", nullable = false)
     private Card fromCardId;
 
     @OneToOne
-    @JoinColumn(name = "to_card_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "to_card_id", referencedColumnName = "id", nullable = true)
     private Card toCardId;
 
     @Column(nullable = false, precision = 10, scale = 2)
@@ -34,6 +38,14 @@ public class Transaction {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Card getFromCardId() {

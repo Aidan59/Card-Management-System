@@ -35,7 +35,7 @@ public class CardService {
 
         cardRepository.save(card);
 
-        cardDto.setNumber("************" + cardDto.getNumber().substring(11, 15));
+        cardDto.setNumber("************" + cardDto.getNumber().substring(12, 16));
         return cardDto;
     }
 
@@ -60,7 +60,7 @@ public class CardService {
         return cards.stream().map(card -> {
             try {
                 return new CardDto(
-                        "************" + aesUtil.decrypt(card.getNumber()).substring(11, 15),
+                        "************" + aesUtil.decrypt(card.getNumber()).substring(12, 16),
                         card.getExpiration_date(),
                         card.getStatus().toString(),
                         card.getBalance(),
@@ -72,5 +72,27 @@ public class CardService {
         }).collect(Collectors.toList());
 
 
+    }
+
+    public List<CardDto> getAllUserCards(Long userId) {
+        List<Card> cards = cardRepository.findAllByUserId(userId);
+
+        return cards.stream().map(card -> {
+            try {
+                return new CardDto(
+                        "************" + aesUtil.decrypt(card.getNumber()).substring(12, 16),
+                        card.getExpiration_date(),
+                        card.getStatus(),
+                        card.getBalance(),
+                        card.getUser().getId()
+                );
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.toList());
+    }
+
+    public Card getCard(Long id) {
+        return cardRepository.findById(id).get();
     }
 }
