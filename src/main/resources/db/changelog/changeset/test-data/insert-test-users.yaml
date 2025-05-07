@@ -1,0 +1,79 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-test-users
+      author: Danil
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: email
+                  value: "admin@example.com"
+              - column:
+                  name: password
+                  value: "$2a$12$WaKrAOvEBDMq2gtviQpVyORei/SQTZpORapS.dK.CR004QaRvB9du"
+              - column:
+                  name: first_name
+                  value: "John"
+              - column:
+                  name: last_name
+                  value: "Doe"
+              - column:
+                  name: role
+                  value: "ADMIN"
+              - column:
+                  name: monthly_limit
+                  value: "5000"
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: email
+                  value: "user1@example.com"
+              - column:
+                  name: password
+                  value: "$2a$12$xkpOHq7EU2VXNwSi8Wbjre/DMQDrwxzIEBCjdJTEPlMUo7i52uA0q"
+              - column:
+                  name: first_name
+                  value: "John2"
+              - column:
+                  name: last_name
+                  value: "Doe2"
+              - column:
+                  name: role
+                  value: "USER"
+              - column:
+                  name: monthly_limit
+                  value: "500"
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: email
+                  value: "user2@example.com"
+              - column:
+                  name: password
+                  value: "$2a$12$xkpOHq7EU2VXNwSi8Wbjre/DMQDrwxzIEBCjdJTEPlMUo7i52uA0q"
+              - column:
+                  name: first_name
+                  value: "Alice"
+              - column:
+                  name: last_name
+                  value: "Smith"
+              - column:
+                  name: role
+                  value: "USER"
+              - column:
+                  name: monthly_limit
+                  value: "10000"

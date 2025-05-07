@@ -20,7 +20,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/user/")
-public class UserController {
+public class
+UserController {
 
     private final UserService userService;
     private final CardService cardService;

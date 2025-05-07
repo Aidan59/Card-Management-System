@@ -1,0 +1,112 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-test-transactions
+      author: Danil
+      changes:
+        - insert:
+            tableName: transactions
+            columns:
+              - column: { name: user_id, valueNumeric: "1" }
+              - column: { name: from_card_id, valueNumeric: "1" }
+              - column: { name: to_card_id, valueNumeric: "2" }
+              - column: { name: amount, valueNumeric: "150.00" }
+              - column: { name: created_at, valueDate: "2024-12-01T10:00:00" }
+
+        - insert:
+            tableName: transactions
+            columns:
+              - column: { name: user_id, valueNumeric: "2" }
+              - column: { name: from_card_id, valueNumeric: "2" }
+              - column: { name: to_card_id, valueNumeric: "3" }
+              - column: { name: amount, valueNumeric: "75.50" }
+              - column: { name: created_at, valueDate: "2024-12-02T14:30:00" }
+
+        - insert:
+            tableName: transactions
+            columns:
+              - column: { name: user_id, valueNumeric: "3" }
+              - column: { name: from_card_id, valueNumeric: "3" }
+              - column: { name: to_card_id, valueNumeric: "4" }
+              - column: { name: amount, valueNumeric: "200.00" }
+              - column: { name: created_at, valueDate: "2024-12-03T09:15:00" }
+
+        - insert:
+            tableName: transactions
+            columns:
+              - column: { name: user_id, valueNumeric: "1" }
+              - column: { name: from_card_id, valueNumeric: "4" }
+              - column: { name: to_card_id, valueNumeric: "1" }
+              - column: { name: amount, valueNumeric: "50.00" }
+              - column: { name: created_at, valueDate: "2024-12-04T11:45:00" }
+
+        - insert:
+            tableName: transactions
+            columns:
+              - column: { name: user_id, valueNumeric: "2" }
+              - column: { name: from_card_id, valueNumeric: "2" }
+              - column: { name: to_card_id, valueNumeric: "5" }
+              - column: { name: amount, valueNumeric: "300.75" }
+              - column: { name: created_at, valueDate: "2024-12-05T16:00:00" }
+
+        - insert:
+            tableName: transactions
+            columns:
+              - column: { name: user_id, valueNumeric: "3" }
+              - column: { name: from_card_id, valueNumeric: "6" }
+              - column: { name: to_card_id, valueNumeric: "1" }
+              - column: { name: amount, valueNumeric: "125.00" }
+              - column: { name: created_at, valueDate: "2024-12-06T13:20:00" }
+
+        - insert:
+            tableName: transactions
+            columns:
+              - column: { name: user_id, valueNumeric: "1" }
+              - column: { name: from_card_id, valueNumeric: "1" }
+              - column: { name: to_card_id, valueNumeric: "6" }
+              - column: { name: amount, valueNumeric: "99.99" }
+              - column: { name: created_at, valueDate: "2024-12-07T17:50:00" }
+
+        - insert:
+            tableName: transactions
+            columns:
+              - column: { name: user_id, valueNumeric: "2" }
+              - column: { name: from_card_id, valueNumeric: "5" }
+              - column: { name: to_card_id, valueNumeric: "3" }
+              - column: { name: amount, valueNumeric: "48.25" }
+              - column: { name: created_at, valueDate: "2024-12-08T08:10:00" }
+
+        - insert:
+            tableName: transactions
+            columns:
+              - column: { name: user_id, valueNumeric: "3" }
+              - column: { name: from_card_id, valueNumeric: "6" }
+              - column: { name: to_card_id, valueNumeric: "2" }
+              - column: { name: amount, valueNumeric: "75.00" }
+              - column: { name: created_at, valueDate: "2024-12-09T12:35:00" }
+
+        - insert:
+            tableName: transactions
+            columns:
+              - column: { name: user_id, valueNumeric: "1" }
+              - column: { name: from_card_id, valueNumeric: "4" }
+              - column: { name: to_card_id, valueNumeric: "5" }
+              - column: { name: amount, valueNumeric: "180.00" }
+              - column: { name: created_at, valueDate: "2024-12-10T15:45:00" }
+
+        - insert:
+            tableName: transactions
+            columns:
+              - column: { name: user_id, valueNumeric: "2" }
+              - column: { name: from_card_id, valueNumeric: "5" }
+              - column: { name: to_card_id, valueNumeric: "1" }
+              - column: { name: amount, valueNumeric: "210.00" }
+              - column: { name: created_at, valueDate: "2024-12-11T18:00:00" }
+
+        - insert:
+            tableName: transactions
+            columns:
+              - column: { name: user_id, valueNumeric: "3" }
+              - column: { name: from_card_id, valueNumeric: "3" }
+              - column: { name: to_card_id, valueNumeric: "6" }
+              - column: { name: amount, valueNumeric: "130.30" }
+              - column: { name: created_at, valueDate: "2024-12-12T10:30:00" }

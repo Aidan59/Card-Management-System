@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-test-block-requests
+      author: Danil
+      changes:
+        - insert:
+            tableName: block_card_requests
+            columns:
+              - column: { name: card_id, valueNumeric: "1" }
+              - column: { name: user_id, valueNumeric: "1" }
+              - column: { name: request_date, valueDate: "2025-01-10T09:30:00" }
+              - column: { name: status, value: "PENDING" }
+
+        - insert:
+            tableName: block_card_requests
+            columns:
+              - column: { name: card_id, valueNumeric: "3" }
+              - column: { name: user_id, valueNumeric: "3" }
+              - column: { name: request_date, valueDate: "2025-01-15T14:45:00" }
+              - column: { name: status, value: "APPROVED" }
+
+        - insert:
+            tableName: block_card_requests
+            columns:
+              - column: { name: card_id, valueNumeric: "5" }
+              - column: { name: user_id, valueNumeric: "2" }
+              - column: { name: request_date, valueDate: "2025-01-15T14:45:00" }
+              - column: { name: status, value: "APPROVED" }

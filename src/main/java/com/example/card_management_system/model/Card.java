@@ -32,6 +32,19 @@ public class Card {
     @JsonBackReference
     private User user;
 
+    public Card(Long id, String number, Date expiration_date, String status, BigDecimal balance, User user) {
+        this.id = id;
+        this.number = number;
+        this.expiration_date = expiration_date;
+        this.status = status;
+        this.balance = balance;
+        this.user = user;
+    }
+
+    public Card() {
+
+    }
+
     public Long getId() {
         return id;
     }

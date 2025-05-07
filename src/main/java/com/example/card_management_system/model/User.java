@@ -48,6 +48,19 @@ public class User implements UserDetails {
         USER
     }
 
+    public User() {
+    }
+
+    public User(Long monthlyLimit, Role role, String first_name, String last_name, String password, String email, Long id) {
+        this.monthlyLimit = monthlyLimit;
+        this.role = role;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.password = password;
+        this.email = email;
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

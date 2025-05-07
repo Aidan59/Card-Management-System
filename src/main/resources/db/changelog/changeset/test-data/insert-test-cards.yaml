@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-test-cards
+      author: Danil
+      changes:
+        - insert:
+            tableName: cards
+            columns:
+              - column: { name: number, value: "hmWpQMzGfAqKqEUdJpQSgLRakujleGwvDamwUYGbv/8P5lg3hP10Gr/YmuM=" }
+              - column: { name: expiration_date, valueDate: "2027-12-31" }
+              - column: { name: status, value: "ACTIVE" }
+              - column: { name: balance, valueNumeric: 1000.00 }
+              - column: { name: user_id, valueNumeric: 1 }
+
+        - insert:
+            tableName: cards
+            columns:
+              - column: { name: number, value: "Qnjd8da9x7Tmz2O+yTE3utqcllvN0mERUb8I9KgzTVqQfp0psq0s2yuk11Q=" }
+              - column: { name: expiration_date, valueDate: "2026-11-30" }
+              - column: { name: status, value: "ACTIVE" }
+              - column: { name: balance, valueNumeric: 500.50 }
+              - column: { name: user_id, valueNumeric: 2 }
+
+        - insert:
+            tableName: cards
+            columns:
+              - column: { name: number, value: "k3NSLEColVwwwAwcfibjGsrxXsfCcYA2dWOD275eJXlaEoY235/URNUOm54=" }
+              - column: { name: expiration_date, valueDate: "2025-10-15" }
+              - column: { name: status, value: "BLOCKED" }
+              - column: { name: balance, valueNumeric: 0.00 }
+              - column: { name: user_id, valueNumeric: 3 }
+
+        - insert:
+            tableName: cards
+            columns:
+              - column: { name: number, value: "AyOeWom0SvVzf2t8eWbSAqyKo+iGrmkzLW7Aael9VxwVVQGuSr2htIWUS1k=" }
+              - column: { name: expiration_date, valueDate: "2028-01-01" }
+              - column: { name: status, value: "ACTIVE" }
+              - column: { name: balance, valueNumeric: 2500.00 }
+              - column: { name: user_id, valueNumeric: 1 }
+
+        - insert:
+            tableName: cards
+            columns:
+              - column: { name: number, value: "nwHfYIKdsLKYwm0rCuIQUB0h9Q9CslOxsJT4ipvfoU/EdGrEVibVHFuRHmA=" }
+              - column: { name: expiration_date, valueDate: "2026-05-20" }
+              - column: { name: status, value: "BLOCKED" }
+              - column: { name: balance, valueNumeric: 750.25 }
+              - column: { name: user_id, valueNumeric: 2 }
+
+        - insert:
+            tableName: cards
+            columns:
+              - column: { name: number, value: "B26Y0eiw/YXtr8J1rmIghSOPJl4Zz60GvtMJ26ZNniKaSsDjMpt1aKwXEq8=" }
+              - column: { name: expiration_date, valueDate: "2029-09-09" }
+              - column: { name: status, value: "ACTIVE" }
+              - column: { name: balance, valueNumeric: 120.75 }
+              - column: { name: user_id, valueNumeric: 3 }
