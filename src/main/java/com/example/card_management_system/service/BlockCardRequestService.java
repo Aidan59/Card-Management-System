@@ -8,6 +8,10 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 
+/**
+ * Service responsible for handling operations related to card block requests.
+ * Allows users to submit a request to block a specific card, which is then stored.
+ */
 @Service
 public class BlockCardRequestService {
 
@@ -15,12 +19,26 @@ public class BlockCardRequestService {
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
 
+    /**
+     * Constructs a new {@code BlockCardRequestService} with the necessary repositories.
+     *
+     * @param blockCardRequestRepository the repository used for storing block card requests
+     * @param cardRepository             the repository used for accessing cards
+     * @param userRepository             the repository used for accessing users
+     */
     public BlockCardRequestService(BlockCardRequestRepository blockCardRequestRepository, CardRepository cardRepository, UserRepository userRepository) {
         this.blockCardRequestRepository = blockCardRequestRepository;
         this.cardRepository = cardRepository;
         this.userRepository = userRepository;
     }
 
+    /**
+     * Creates and saves a new block card request from a given user for a given card.
+     * The request is marked as {@code PENDING} by default.
+     *
+     * @param userId the ID of the user requesting the card block
+     * @param cardId the ID of the card to be blocked
+     */
     public void makeCardBlockRequest(Long userId, Long cardId) {
         BlockCardRequest blockCardRequest = new BlockCardRequest();
         blockCardRequest.setCard(cardRepository.findById(cardId).get());

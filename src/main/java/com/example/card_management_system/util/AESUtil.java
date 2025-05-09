@@ -11,6 +11,14 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Base64;
 
+/**
+ * Utility class for encryption and decryption using AES in GCM mode with NoPadding.
+ * This class provides methods to securely encrypt and decrypt data using a secret key.
+ * <p>
+ * The secret key is injected from the application properties (through the `encryption.secret` property) and is used
+ * for both encryption and decryption. It uses AES with GCM (Galois/Counter Mode) to provide authenticated encryption.
+ * GCM mode ensures both confidentiality and integrity of the encrypted data.
+ */
 @Component
 public class AESUtil {
 
@@ -24,10 +32,25 @@ public class AESUtil {
 
     private final SecretKey secretKey;
 
+    /**
+     * Constructs an instance of AESUtil using the secret key loaded from application properties.
+     * The key is used for AES encryption and decryption.
+     */
     public AESUtil() {
         this.secretKey = new SecretKeySpec(secret.getBytes(), "AES");
     }
 
+    /**
+     * Encrypts the provided data using AES/GCM/NoPadding encryption.
+     * <p>
+     * This method generates a random initialization vector (IV) for each encryption operation to ensure
+     * that the same data encrypted multiple times results in different ciphertexts. The IV is prepended
+     * to the encrypted data and both are base64-encoded for easy storage and transmission.
+     *
+     * @param data the plaintext data to be encrypted
+     * @return the base64-encoded ciphertext with the IV prepended
+     * @throws Exception if an encryption error occurs
+     */
     public String encrypt(String data) throws Exception {
         Cipher cipher = Cipher.getInstance(ALGORITHM);
 
@@ -48,6 +71,16 @@ public class AESUtil {
         return Base64.getEncoder().encodeToString(encryptedIvAndText);
     }
 
+    /**
+     * Decrypts the provided base64-encoded encrypted data using AES/GCM/NoPadding decryption.
+     * <p>
+     * The encrypted data must have the IV prepended to the ciphertext. This method extracts the IV and
+     * uses it for decryption to retrieve the original plaintext data.
+     *
+     * @param encryptedData the base64-encoded encrypted data (including the IV)
+     * @return the decrypted plaintext data
+     * @throws Exception if a decryption error occurs
+     */
     public String decrypt(String encryptedData) throws Exception {
         Cipher cipher = Cipher.getInstance(ALGORITHM);
 

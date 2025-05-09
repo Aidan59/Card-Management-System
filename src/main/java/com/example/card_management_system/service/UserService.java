@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service class for managing user-related operations such as retrieving,
+ * creating, updating limits, and deleting users.
+ */
 @Service
 public class UserService {
 
@@ -28,6 +32,11 @@ public class UserService {
 
     }
 
+    /**
+     * Retrieves all users from the database and converts them to UserDto objects.
+     *
+     * @return a list of UserDto representing all users
+     */
     public List<UserDto> getAllUsers(){
         List<User> users = userRepository.findAll();
         return users.stream().map(user -> new UserDto(
@@ -39,10 +48,22 @@ public class UserService {
         )).collect(Collectors.toList());
     }
 
+    /**
+     * Finds a user by their ID.
+     *
+     * @param id the ID of the user
+     * @return the User object if found, otherwise null
+     */
     public User getUserById(Long id){
         return userRepository.findById(id).orElse(null);
     }
 
+    /**
+     * Creates a new user in the database with encoded password and role.
+     *
+     * @param userDto the user data to be saved
+     * @return the same UserDto object that was passed in
+     */
     public UserDto createUser(UserDto userDto){
         User user = new User();
         user.setEmail(userDto.getEmail());
@@ -56,6 +77,12 @@ public class UserService {
         return userDto;
     }
 
+    /**
+     * Sets a monthly spending limit for the user.
+     *
+     * @param id    the ID of the user
+     * @param limit the monthly limit to be set
+     */
     public void setUserLimit(Long id, Long limit){
         User user = userRepository.findById(id).get();
         user.setMonthlyLimit(limit);
@@ -63,6 +90,11 @@ public class UserService {
         userRepository.save(user);
     }
 
+    /**
+     * Deletes a user by their ID.
+     *
+     * @param id the ID of the user to delete
+     */
     public void deleteUser(Long id){
         userRepository.deleteById(id);
     }

@@ -17,6 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service class responsible for handling transactions between cards.
+ * Provides functionality to execute transactions, retrieve transaction history for a specific card,
+ * and calculate the total amount of money withdrawn by the user in the current month.
+ */
 @Service
 public class TransactionService {
 
@@ -24,11 +29,24 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final CardRepository cardRepository;
 
+    /**
+     * Constructs a new TransactionService with the specified repositories.
+     *
+     * @param transactionRepository repository for transaction persistence
+     * @param cardRepository        repository for card retrieval and persistence
+     */
     public TransactionService(TransactionRepository transactionRepository, CardRepository cardRepository) {
         this.transactionRepository = transactionRepository;
         this.cardRepository = cardRepository;
     }
 
+    /**
+     * Retrieves all transactions associated with a specific card.
+     * This includes both transactions where the card was used as a source or a destination.
+     *
+     * @param cardId ID of the card
+     * @return list of {@link TransactionDto} representing the transactions
+     */
     public List<TransactionDto> getAllTransactionsByCardId(Long cardId) {
         List<Transaction> transactions = new ArrayList<>();
         transactions.addAll(transactionRepository.findAllByFromCardId(cardRepository.findById(cardId).get()));
@@ -42,6 +60,13 @@ public class TransactionService {
         )).collect(Collectors.toList());
     }
 
+    /**
+     * Executes a transaction between two cards or a withdrawal if the recipient is null.
+     * Automatically adjusts the balance of the involved cards and records the transaction.
+     *
+     * @param transactionDto object containing transaction details
+     * @throws RuntimeException if the balance on the source card is insufficient
+     */
     public void executeTransaction(TransactionDto transactionDto) {
         Card fromCard = cardRepository.findById(transactionDto.getFromCardId()).get();
         Card toCard;
@@ -73,6 +98,12 @@ public class TransactionService {
         transactionRepository.save(transaction);
     }
 
+
+    /**
+     * Calculates the total sum of withdrawals made by the current user in the current calendar month.
+     *
+     * @return total sum of withdrawals as {@link BigDecimal}
+     */
     public BigDecimal getMonthlyWithdrawSum() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime startOfMonth = now.withDayOfMonth(1).toLocalDate().atStartOfDay();
@@ -81,6 +112,11 @@ public class TransactionService {
         return transactionRepository.getSumOfWithdrawalsForCurrentMonthByUser(startOfMonth, startOfNextMonth, getCurrentUser().getId());
     }
 
+    /**
+     * Retrieves the current authenticated user from the security context.
+     *
+     * @return the currently authenticated {@link User}
+     */
     private User getCurrentUser() {
         return ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
     }

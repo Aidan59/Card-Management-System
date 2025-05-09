@@ -12,6 +12,12 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service class for managing bank cards.
+ * <p>
+ * Handles operations such as creating, blocking, activating, deleting cards,
+ * retrieving all cards, and retrieving cards by user.
+ */
 @Service
 public class CardService {
 
@@ -26,6 +32,15 @@ public class CardService {
         this.aesUtil = aesUtil;
     }
 
+    /**
+     * Creates a new card for a user.
+     * The card number is encrypted before being saved,
+     * and the returned DTO contains a masked version of the number.
+     *
+     * @param cardDto DTO containing card details to be created
+     * @return CardDto with masked card number
+     * @throws Exception if encryption fails
+     */
     public CardDto createCard(CardDto cardDto) throws Exception {
         Card card = new Card();
         card.setUser(userRepository.findById(cardDto.getUserId()).get());
@@ -40,22 +55,46 @@ public class CardService {
         return cardDto;
     }
 
+    /**
+     * Blocks a card by setting its status to "BLOCKED".
+     *
+     * @param id the ID of the card to block
+     * @return the updated Card object
+     * @throws RuntimeException if the card is not found
+     */
     public Card blockCard(Long id) {
         Card card = cardRepository.findById(id).orElseThrow(() -> new RuntimeException("Карта не найдена"));
         card.setStatus("BLOCKED");
         return cardRepository.save(card);
     }
 
+    /**
+     * Activates a card by setting its status to "ACTIVE".
+     *
+     * @param id the ID of the card to activate
+     * @return the updated Card object
+     * @throws RuntimeException if the card is not found
+     */
     public Card activateCard(Long id) {
         Card card = cardRepository.findById(id).orElseThrow(() -> new RuntimeException("Карта не найдена"));
         card.setStatus("ACTIVE");
         return cardRepository.save(card);
     }
 
+    /**
+     * Deletes a card by its ID.
+     *
+     * @param id the ID of the card to delete
+     */
     public void deleteCard(Long id) {
         cardRepository.deleteById(id);
     }
 
+    /**
+     * Retrieves all cards from the system and masks their card numbers.
+     *
+     * @return list of CardDto objects with masked card numbers
+     */
     public List<CardDto> getAllCards() {
         List<Card> cards = cardRepository.findAll();
         return cards.stream().map(card -> {
@@ -75,6 +114,12 @@ public class CardService {
 
     }
 
+    /**
+     * Retrieves all cards that belong to a specific user and masks their card numbers.
+     *
+     * @param userId the ID of the user
+     * @return list of CardDto objects for the user
+     */
     public List<CardDto> getAllUserCards(Long userId) {
         List<Card> cards = cardRepository.findAllByUserId(userId);
 
@@ -93,6 +138,12 @@ public class CardService {
         }).collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves a card by its ID.
+     *
+     * @param id the ID of the card
+     * @return the Card object
+     */
     public Card getCard(Long id) {
         return cardRepository.findById(id).get();
     }
