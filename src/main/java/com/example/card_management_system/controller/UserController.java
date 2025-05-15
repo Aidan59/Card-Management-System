@@ -2,7 +2,6 @@ package com.example.card_management_system.controller;
 
 import com.example.card_management_system.dto.CardDto;
 import com.example.card_management_system.dto.TransactionDto;
-import com.example.card_management_system.model.BlockCardRequest;
 import com.example.card_management_system.model.User;
 import com.example.card_management_system.service.BlockCardRequestService;
 import com.example.card_management_system.service.CardService;
@@ -10,7 +9,6 @@ import com.example.card_management_system.service.TransactionService;
 import com.example.card_management_system.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 

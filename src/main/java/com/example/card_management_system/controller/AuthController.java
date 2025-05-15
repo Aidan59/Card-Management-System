@@ -5,7 +5,6 @@ import com.example.card_management_system.dto.LoginRequest;
 import com.example.card_management_system.security.JwtTokenProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +20,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    @Autowired
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 

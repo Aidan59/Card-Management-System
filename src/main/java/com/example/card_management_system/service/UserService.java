@@ -2,9 +2,7 @@ package com.example.card_management_system.service;
 
 import com.example.card_management_system.dto.UserDto;
 import com.example.card_management_system.model.User;
-import com.example.card_management_system.repository.CardRepository;
 import com.example.card_management_system.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,18 +16,14 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    @Autowired
     private final UserRepository userRepository;
-    private final CardRepository cardRepository;
     private final PasswordEncoder passwordEncoder;
 
 
 
-    public UserService(UserRepository userRepository, CardRepository cardRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.cardRepository = cardRepository;
         this.passwordEncoder = passwordEncoder;
-
     }
 
     /**

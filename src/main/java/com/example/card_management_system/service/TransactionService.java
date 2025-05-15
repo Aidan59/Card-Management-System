@@ -6,7 +6,6 @@ import com.example.card_management_system.model.Transaction;
 import com.example.card_management_system.model.User;
 import com.example.card_management_system.repository.CardRepository;
 import com.example.card_management_system.repository.TransactionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +24,6 @@ import java.util.stream.Collectors;
 @Service
 public class TransactionService {
 
-    @Autowired
     private final TransactionRepository transactionRepository;
     private final CardRepository cardRepository;
 

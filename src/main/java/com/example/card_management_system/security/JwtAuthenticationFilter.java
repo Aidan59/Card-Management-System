@@ -27,7 +27,6 @@ import java.util.Collections;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Autowired
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
 

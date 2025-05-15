@@ -5,7 +5,6 @@ import com.example.card_management_system.model.Card;
 import com.example.card_management_system.repository.CardRepository;
 import com.example.card_management_system.repository.UserRepository;
 import com.example.card_management_system.util.AESUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -21,7 +20,6 @@ import java.util.stream.Collectors;
 @Service
 public class CardService {
 
-    @Autowired
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
     private final AESUtil aesUtil;

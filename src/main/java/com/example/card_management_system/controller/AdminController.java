@@ -7,7 +7,6 @@ import com.example.card_management_system.model.Card;
 import com.example.card_management_system.service.CardService;
 import com.example.card_management_system.service.TransactionService;
 import com.example.card_management_system.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +21,6 @@ import java.util.List;
 @RequestMapping("/api/admin")
 public class AdminController {
 
-    @Autowired
     private final CardService cardService;
     private final UserService userService;
     private final TransactionService transactionService;
