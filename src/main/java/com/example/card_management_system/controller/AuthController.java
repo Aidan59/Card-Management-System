@@ -3,16 +3,14 @@ package com.example.card_management_system.controller;
 import com.example.card_management_system.dto.JwtAuthenticationResponse;
 import com.example.card_management_system.dto.LoginRequest;
 import com.example.card_management_system.security.JwtTokenProvider;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * REST controller responsible for user authentication.
@@ -57,5 +55,10 @@ public class AuthController {
         String jwt = jwtTokenProvider.generateToken(authentication);
 
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> test(){
+        return new ResponseEntity<>("Hello World", HttpStatus.OK);
     }
 }
