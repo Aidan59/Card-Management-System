@@ -3,8 +3,10 @@ package com.example.card_management_system.controller;
 
 import com.example.card_management_system.dto.LoginRequest;
 import com.example.card_management_system.dto.TransactionDto;
+import com.example.card_management_system.repository.BlockCardRequestRepository;
 import com.example.card_management_system.repository.CardRepository;
 import com.example.card_management_system.repository.UserRepository;
+import com.example.card_management_system.service.BlockCardRequestService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +39,9 @@ public class UserControllerTest {
 
     @Autowired
     private CardRepository cardRepository;
+
+    @Autowired
+    private BlockCardRequestService blockCardRequestService;
 
     private LoginRequest loginRequest = new LoginRequest("user1@example.com", "password123");
 
@@ -75,9 +80,21 @@ public class UserControllerTest {
 
     @Test
     void testBlockCardRequest() throws Exception {
-        mockMvc.perform(post("/api/user/cards/2/block_request")
+        Long cardId = 2L;
+
+        mockMvc.perform(post("/api/user/cards/" + cardId + "/block_request")
                 .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk());
+
+        mockMvc.perform(post("/api/user/cards/" + cardId + "/block_request")
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(post("/api/user/cards/999/block_request")
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isNotFound());
+
+        blockCardRequestService.deleteCardBlockRequest(cardId);
     }
 
     @Test
@@ -92,20 +109,41 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$[0].amount").exists())
                 .andExpect(jsonPath("$[0].createdAt").exists());
 
+        mockMvc.perform(get("/api/user/cards/999/transactions")
+                .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isNotFound());
+
+        mockMvc.perform(get("/api/user/cards/3/transactions")
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isForbidden());
     }
 
     @Test
     void testTransaction() throws Exception {
         TransactionDto transactionDto1 = new TransactionDto(
                 2L,
-                4L,
+                5L,
                 new BigDecimal("10"),
                 new Timestamp(System.currentTimeMillis())
         );
 
         TransactionDto transactionDto2 = new TransactionDto(
-                4L,
+                5L,
                 2L,
+                new BigDecimal("10"),
+                new Timestamp(System.currentTimeMillis())
+        );
+
+        TransactionDto transactionDto3 = new TransactionDto(
+                5L,
+                1L,
+                new BigDecimal("10"),
+                new Timestamp(System.currentTimeMillis())
+        );
+
+        TransactionDto transactionDto4 = new TransactionDto(
+                999L,
+                888L,
                 new BigDecimal("10"),
                 new Timestamp(System.currentTimeMillis())
         );
@@ -121,6 +159,18 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(transactionDto2)))
                 .andExpect(status().isOk());
+
+        mockMvc.perform(post("/api/user/cards/transaction")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(transactionDto3)))
+                .andExpect(status().isForbidden());
+
+        mockMvc.perform(post("/api/user/cards/transaction")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(transactionDto4)))
+                .andExpect(status().isNotFound());
     }
 
     @Test

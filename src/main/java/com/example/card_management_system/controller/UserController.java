@@ -2,6 +2,10 @@ package com.example.card_management_system.controller;
 
 import com.example.card_management_system.dto.CardDto;
 import com.example.card_management_system.dto.TransactionDto;
+import com.example.card_management_system.exception.CardNotFoundException;
+import com.example.card_management_system.exception.EmptyListException;
+import com.example.card_management_system.exception.ForbiddenOperationException;
+import com.example.card_management_system.exception.UnknownErrorException;
 import com.example.card_management_system.model.User;
 import com.example.card_management_system.service.BlockCardRequestService;
 import com.example.card_management_system.service.CardService;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -72,7 +77,11 @@ UserController {
      */
     @GetMapping("/cards")
     public List<CardDto> getAllUserCards(){
-        return cardService.getAllUserCards(getCurrentUserId());
+        List<CardDto> cardDtos = cardService.getAllUserCards(getCurrentUserId());
+
+        if (cardDtos.isEmpty()) throw new EmptyListException();
+
+        return cardDtos;
     }
 
     /**
@@ -83,9 +92,10 @@ UserController {
      */
     @PostMapping("/cards/{id}/block_request")
     public ResponseEntity<String> getBlockCardRequest(@PathVariable Long id){
+
         blockCardRequestService.makeCardBlockRequest(getCurrentUserId(), id);
 
-        return ResponseEntity.ok("Заявка на блокировку карты оставлена.");
+        return ResponseEntity.ok("The request to block the card has been submitted.");
     }
 
     /**
@@ -96,10 +106,17 @@ UserController {
      */
     @GetMapping("/cards/{id}/transactions")
     public List<TransactionDto> getAllCardTransactions(@PathVariable Long id){
+        if (cardService.getCard(id).isEmpty())
+            throw new CardNotFoundException(id);
 
-        if ( !(cardService.getCard(id).getUser().getId().equals(getCurrentUserId())) ) {
-            return null;
-        }
+        if ( !(cardService.getCard(id).get().getUser().getId().equals(getCurrentUserId())) )
+            throw new ForbiddenOperationException("You are not allowed to see this card transactions.");
+
+        List<TransactionDto> transactionDtos = transactionService.getAllTransactionsByCardId(id);
+
+        if (transactionDtos.isEmpty())
+            throw new EmptyListException("Transaction list is empty.");
+
 
         return transactionService.getAllTransactionsByCardId(id);
     }
@@ -112,20 +129,23 @@ UserController {
      */
     @PostMapping("/cards/transaction")
     public ResponseEntity<String> addCardTransaction(@RequestBody TransactionDto transactionDto){
+        if (cardService.getCard(transactionDto.getFromCardId()).isEmpty())
+            throw new CardNotFoundException(transactionDto.getFromCardId());
+        if (cardService.getCard(transactionDto.getToCardId()).isEmpty())
+            throw new CardNotFoundException(transactionDto.getToCardId());
 
-
-        if ( !(cardService.getCard(transactionDto.getFromCardId()).getUser().getId().equals(getCurrentUserId())) ||
-                !(cardService.getCard(transactionDto.getToCardId()).getUser().getId().equals(getCurrentUserId()))) {
-            return ResponseEntity.ok("Перевод должен осуществлятся только между своими картами.");
+        if ( !(cardService.getCard(transactionDto.getFromCardId()).get().getUser().getId().equals(getCurrentUserId())) ||
+                !(cardService.getCard(transactionDto.getToCardId()).get().getUser().getId().equals(getCurrentUserId()))) {
+            throw new ForbiddenOperationException();
         }
 
         try {
             transactionService.executeTransaction(transactionDto);
         } catch (RuntimeException e) {
-            return ResponseEntity.ok("Перевод не был доставлен.");
+            throw new UnknownErrorException();
         }
 
-        return ResponseEntity.ok("Перевод успешно совершён.");
+        return ResponseEntity.ok("Translation completed successfully.");
     }
 
     /**
@@ -137,6 +157,9 @@ UserController {
      */
     @PostMapping("/cards/{id}/withdraw/{amount}")
     private ResponseEntity<String> withdrawMoney(@PathVariable Long id, @PathVariable BigDecimal amount){
+        if (cardService.getCard(id).isEmpty())
+            throw new CardNotFoundException(id);
+
         TransactionDto transactionDto;
 
         try {
@@ -159,14 +182,14 @@ UserController {
 
                 transactionService.executeTransaction(transactionDto);
             } else {
-                return ResponseEntity.ok("Лимит списания средств.");
+                return ResponseEntity.ok("Limit on withdrawal of funds.");
             }
         } catch (RuntimeException e) {
             e.printStackTrace();
-            return ResponseEntity.ok("Вывод средств не был совершён.");
+            throw new UnknownErrorException();
         }
 
-        return ResponseEntity.ok("Вывод средств успешно совершён.");
+        return ResponseEntity.ok("The withdrawal of funds has been successfully completed.");
     }
 
     /**

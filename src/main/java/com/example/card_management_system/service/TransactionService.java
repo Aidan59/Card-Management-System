@@ -46,6 +46,7 @@ public class TransactionService {
      * @return list of {@link TransactionDto} representing the transactions
      */
     public List<TransactionDto> getAllTransactionsByCardId(Long cardId) {
+
         List<Transaction> transactions = new ArrayList<>();
         transactions.addAll(transactionRepository.findAllByFromCardId(cardRepository.findById(cardId).get()));
         transactions.addAll(transactionRepository.findAllByToCardId(cardRepository.findById(cardId).get()));
@@ -75,7 +76,7 @@ public class TransactionService {
         }
 
         if (fromCard.getBalance().compareTo(transactionDto.getAmount()) < 0 && toCard != null) {
-            throw new RuntimeException("Недостаточно средств");
+            throw new RuntimeException("Not enough balance");
         } else if (toCard == null) {
             fromCard.setBalance(fromCard.getBalance().subtract(transactionDto.getAmount()));
             cardRepository.save(fromCard);

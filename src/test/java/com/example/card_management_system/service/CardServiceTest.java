@@ -135,7 +135,7 @@ class CardServiceTest {
 
         when(cardRepository.findById(10L)).thenReturn(Optional.of(card));
 
-        Card result = cardService.getCard(10L);
+        Card result = cardService.getCard(10L).get();
 
         assertEquals(10L, result.getId());
     }

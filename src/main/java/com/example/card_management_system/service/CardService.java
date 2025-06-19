@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -142,7 +143,7 @@ public class CardService {
      * @param id the ID of the card
      * @return the Card object
      */
-    public Card getCard(Long id) {
-        return cardRepository.findById(id).get();
+    public Optional<Card> getCard(Long id) {
+        return cardRepository.findById(id);
     }
 }

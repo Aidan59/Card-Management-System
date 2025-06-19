@@ -1,10 +1,16 @@
 package com.example.card_management_system.service;
 
+import com.example.card_management_system.exception.CardNotFoundException;
+import com.example.card_management_system.exception.RequestAlreadyExistException;
+import com.example.card_management_system.exception.UserNotFoundException;
 import com.example.card_management_system.model.BlockCardRequest;
+import com.example.card_management_system.model.Card;
+import com.example.card_management_system.model.User;
 import com.example.card_management_system.repository.BlockCardRequestRepository;
 import com.example.card_management_system.repository.CardRepository;
 import com.example.card_management_system.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 
@@ -40,12 +46,32 @@ public class BlockCardRequestService {
      * @param cardId the ID of the card to be blocked
      */
     public void makeCardBlockRequest(Long userId, Long cardId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new CardNotFoundException(cardId));
+
+        if (blockCardRequestRepository.findBlockCardRequestByCard_Id(cardId).isPresent()) throw new RequestAlreadyExistException();
+
+
         BlockCardRequest blockCardRequest = new BlockCardRequest();
-        blockCardRequest.setCard(cardRepository.findById(cardId).get());
-        blockCardRequest.setUser(userRepository.findById(userId).get());
+
+        blockCardRequest.setCard(card);
+        blockCardRequest.setUser(user);
         blockCardRequest.setRequest_date(new Timestamp(System.currentTimeMillis()));
         blockCardRequest.setStatus(BlockCardRequest.Status.PENDING);
 
         blockCardRequestRepository.save(blockCardRequest);
+    }
+
+    /**
+     * Deletes block card request from a given card.
+     *
+     * @param cardId
+     */
+    @Transactional
+    public void deleteCardBlockRequest(Long cardId) {
+        blockCardRequestRepository.deleteBlockCardRequestByCard_Id(cardId);
     }
 }
