@@ -44,4 +44,3 @@ databaseChangeLog:
                   type: bigint
                   constraints:
                     nullable: true
-

@@ -1,12 +1,16 @@
 package com.example.card_management_system.service;
 
 import com.example.card_management_system.dto.UserDto;
+import com.example.card_management_system.exception.EmptyListException;
+import com.example.card_management_system.exception.UserAlreadyExistsException;
+import com.example.card_management_system.exception.UserNotFoundException;
 import com.example.card_management_system.model.User;
 import com.example.card_management_system.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -33,13 +37,18 @@ public class UserService {
      */
     public List<UserDto> getAllUsers(){
         List<User> users = userRepository.findAll();
-        return users.stream().map(user -> new UserDto(
+        List<UserDto> userDtos = users.stream().map(user -> new UserDto(
                 user.getEmail(),
                 user.getPassword(),
                 user.getFirst_name(),
                 user.getLast_name(),
                 user.getRole().toString()
         )).collect(Collectors.toList());
+
+        if (userDtos.isEmpty())
+            throw new EmptyListException();
+
+        return userDtos;
     }
 
     /**
@@ -59,6 +68,9 @@ public class UserService {
      * @return the same UserDto object that was passed in
      */
     public UserDto createUser(UserDto userDto){
+        if (userRepository.existsByEmail(userDto.getEmail()))
+            throw new UserAlreadyExistsException();
+
         User user = new User();
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
@@ -78,10 +90,14 @@ public class UserService {
      * @param limit the monthly limit to be set
      */
     public void setUserLimit(Long id, Long limit){
-        User user = userRepository.findById(id).get();
-        user.setMonthlyLimit(limit);
+        Optional<User> user = userRepository.findById(id);
 
-        userRepository.save(user);
+        if (user.isEmpty())
+            throw new UserNotFoundException(id);
+
+        user.get().setMonthlyLimit(limit);
+
+        userRepository.save(user.get());
     }
 
     /**
@@ -90,6 +106,9 @@ public class UserService {
      * @param id the ID of the user to delete
      */
     public void deleteUser(Long id){
+        if (!userRepository.existsById(id))
+            throw new UserNotFoundException(id);
+
         userRepository.deleteById(id);
     }
 }

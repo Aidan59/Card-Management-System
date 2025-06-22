@@ -1,6 +1,9 @@
 package com.example.card_management_system.service;
 
 import com.example.card_management_system.dto.CardDto;
+import com.example.card_management_system.exception.CardAlreadyExistsException;
+import com.example.card_management_system.exception.CardNotFoundException;
+import com.example.card_management_system.exception.EmptyListException;
 import com.example.card_management_system.model.Card;
 import com.example.card_management_system.repository.CardRepository;
 import com.example.card_management_system.repository.UserRepository;
@@ -41,6 +44,19 @@ public class CardService {
      * @throws Exception if encryption fails
      */
     public CardDto createCard(CardDto cardDto) throws Exception {
+
+        if (cardRepository.findAllByUserId(cardDto.getUserId()).stream().anyMatch(
+                c -> {
+                    try {
+                        return aesUtil.decrypt(c.getNumber()).equals(cardDto.getNumber());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+        ))
+            throw new CardAlreadyExistsException();
+
+
         Card card = new Card();
         card.setUser(userRepository.findById(cardDto.getUserId()).get());
         card.setBalance(cardDto.getBalance());
@@ -62,9 +78,14 @@ public class CardService {
      * @throws RuntimeException if the card is not found
      */
     public Card blockCard(Long id) {
-        Card card = cardRepository.findById(id).orElseThrow(() -> new RuntimeException("Карта не найдена"));
-        card.setStatus("BLOCKED");
-        return cardRepository.save(card);
+        Optional<Card> card = cardRepository.findById(id);
+
+        if (card.isEmpty()) {
+            throw new CardNotFoundException(id);
+        } else {
+            card.get().setStatus("BLOCKED");
+            return cardRepository.save(card.get());
+        }
     }
 
     /**
@@ -75,9 +96,14 @@ public class CardService {
      * @throws RuntimeException if the card is not found
      */
     public Card activateCard(Long id) {
-        Card card = cardRepository.findById(id).orElseThrow(() -> new RuntimeException("Карта не найдена"));
-        card.setStatus("ACTIVE");
-        return cardRepository.save(card);
+        Optional<Card> card = cardRepository.findById(id);
+
+        if (card.isEmpty()) {
+            throw new CardNotFoundException(id);
+        } else {
+            card.get().setStatus("ACTIVE");
+            return cardRepository.save(card.get());
+        }
     }
 
     /**
@@ -86,6 +112,9 @@ public class CardService {
      * @param id the ID of the card to delete
      */
     public void deleteCard(Long id) {
+        if (cardRepository.findById(id).isEmpty())
+            throw new CardNotFoundException(id);
+
         cardRepository.deleteById(id);
     }
 
@@ -96,6 +125,9 @@ public class CardService {
      */
     public List<CardDto> getAllCards() {
         List<Card> cards = cardRepository.findAll();
+
+        if (cards.isEmpty()) throw new EmptyListException();
+
         return cards.stream().map(card -> {
             try {
                 return new CardDto(

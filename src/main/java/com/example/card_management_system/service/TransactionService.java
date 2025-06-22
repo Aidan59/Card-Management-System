@@ -1,6 +1,8 @@
 package com.example.card_management_system.service;
 
 import com.example.card_management_system.dto.TransactionDto;
+import com.example.card_management_system.exception.CardNotFoundException;
+import com.example.card_management_system.exception.EmptyListException;
 import com.example.card_management_system.model.Card;
 import com.example.card_management_system.model.Transaction;
 import com.example.card_management_system.model.User;
@@ -46,17 +48,23 @@ public class TransactionService {
      * @return list of {@link TransactionDto} representing the transactions
      */
     public List<TransactionDto> getAllTransactionsByCardId(Long cardId) {
+        if (cardRepository.findAllByUserId(cardId).isEmpty())
+            throw new CardNotFoundException(cardId);
 
         List<Transaction> transactions = new ArrayList<>();
         transactions.addAll(transactionRepository.findAllByFromCardId(cardRepository.findById(cardId).get()));
         transactions.addAll(transactionRepository.findAllByToCardId(cardRepository.findById(cardId).get()));
 
-        return transactions.stream().map(transaction -> new TransactionDto(
+        List<TransactionDto> transactionDtos = transactions.stream().map(transaction -> new TransactionDto(
                 transaction.getFromCardId().getId(),
                 transaction.getToCardId() != null ? transaction.getToCardId().getId() : null,
                 transaction.getAmount(),
                 transaction.getCreated_at()
         )).collect(Collectors.toList());
+
+        if (transactionDtos.isEmpty())
+            throw new EmptyListException();
+        return transactionDtos;
     }
 
     /**

@@ -25,15 +25,11 @@ databaseChangeLog:
                   type: bigint
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_transaction_from_card_card
-                    references: cards(id)
               - column:
                   name: to_card_id
                   type: bigint
                   constraints:
                     nullable: true
-                    foreignKeyName: fk_transaction_to_card_card
-                    references: cards(id)
               - column:
                   name: amount
                   type: decimal(10, 2)
@@ -44,3 +40,23 @@ databaseChangeLog:
                   type: timestamp
                   constraints:
                     nullable: false
+
+  - changeSet:
+      id: add-fk-cascade
+      author: Danil
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: transactions
+            baseColumnNames: from_card_id
+            constraintName: fk_transaction_from_card_card
+            referencedTableName: cards
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: transactions
+            baseColumnNames: to_card_id
+            constraintName: fk_transaction_to_card_card
+            referencedTableName: cards
+            referencedColumnNames: id
+            onDelete: CASCADE

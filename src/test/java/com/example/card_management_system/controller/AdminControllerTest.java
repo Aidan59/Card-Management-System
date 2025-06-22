@@ -97,6 +97,12 @@ public class AdminControllerTest {
                  .andExpect(jsonPath("$.balance").exists())
                  .andExpect(jsonPath("$.userId").exists());
 
+        mockMvc.perform(post("/api/admin/cards/create")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(cardJson))
+                .andExpect(status().isBadRequest());
+
 
     }
 
@@ -126,6 +132,11 @@ public class AdminControllerTest {
                 .andExpect(jsonPath("$[1].toCardId").exists())
                 .andExpect(jsonPath("$[1].amount").exists())
                 .andExpect(jsonPath("$[1].createdAt").exists());
+
+        mockMvc.perform(get("/api/admin/cards/999/transactions")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -137,6 +148,14 @@ public class AdminControllerTest {
         mockMvc.perform(post("/api/admin/cards/1/activate")
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk());
+
+        mockMvc.perform(post("/api/admin/cards/999/block")
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isNotFound());
+
+        mockMvc.perform(post("/api/admin/cards/999/activate")
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -174,7 +193,22 @@ public class AdminControllerTest {
                 .andExpect(jsonPath("$.last_Name").exists())
                 .andExpect(jsonPath("$.role").exists());
 
+        mockMvc.perform(post("/api/admin/users/create")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userDto)))
+                .andExpect(status().isBadRequest());
+    }
 
+    @Test
+    void testSetUserLimit() throws Exception {
+        mockMvc.perform(post("/api/admin/users/1/limit/999")
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/api/admin/users/999/limit/999")
+                        .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -186,13 +220,10 @@ public class AdminControllerTest {
                 .andExpect(status().isOk());
 
         assertTrue(userRepository.findById(id).isEmpty());
-    }
 
-    @Test
-    void testSetUserLimit() throws Exception {
-        mockMvc.perform(post("/api/admin/users/1/limit/999")
+        mockMvc.perform(delete("/api/admin/users/999/delete")
                         .header("Authorization", "Bearer " + jwtToken))
-                .andExpect(status().isOk());
+                .andExpect(status().isNotFound());
     }
 
 }

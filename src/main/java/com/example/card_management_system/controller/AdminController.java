@@ -77,6 +77,7 @@ public class AdminController {
      * @param id the ID of the card to block
      * @return the updated Card object with BLOCKED status
      */
+
     @PostMapping("/cards/{id}/block")
     public Card blockCard(@PathVariable Long id) {
         return cardService.blockCard(id);
